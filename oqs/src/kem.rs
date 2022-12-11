@@ -114,39 +114,10 @@ macro_rules! implement_kems {
 }
 
 implement_kems! {
-    ("bike") BikeL1: OQS_KEM_alg_bike_l1,
-    ("bike") BikeL3: OQS_KEM_alg_bike_l3,
-    ("classic_mceliece") ClassicMcEliece348864: OQS_KEM_alg_classic_mceliece_348864,
-    ("classic_mceliece") ClassicMcEliece348864f: OQS_KEM_alg_classic_mceliece_348864f,
-    ("classic_mceliece") ClassicMcEliece460896: OQS_KEM_alg_classic_mceliece_460896,
-    ("classic_mceliece") ClassicMcEliece460896f: OQS_KEM_alg_classic_mceliece_460896f,
-    ("classic_mceliece") ClassicMcEliece6688128: OQS_KEM_alg_classic_mceliece_6688128,
-    ("classic_mceliece") ClassicMcEliece6688128f: OQS_KEM_alg_classic_mceliece_6688128f,
-    ("classic_mceliece") ClassicMcEliece6960119: OQS_KEM_alg_classic_mceliece_6960119,
-    ("classic_mceliece") ClassicMcEliece6960119f: OQS_KEM_alg_classic_mceliece_6960119f,
-    ("classic_mceliece") ClassicMcEliece8192128: OQS_KEM_alg_classic_mceliece_8192128,
-    ("classic_mceliece") ClassicMcEliece8192128f: OQS_KEM_alg_classic_mceliece_8192128f,
-    ("hqc") Hqc128: OQS_KEM_alg_hqc_128,
-    ("hqc") Hqc192: OQS_KEM_alg_hqc_192,
-    ("hqc") Hqc256: OQS_KEM_alg_hqc_256,
+    
     ("kyber") Kyber512: OQS_KEM_alg_kyber_512,
     ("kyber") Kyber768: OQS_KEM_alg_kyber_768,
     ("kyber") Kyber1024: OQS_KEM_alg_kyber_1024,
-    ("kyber") Kyber512_90s: OQS_KEM_alg_kyber_512_90s,
-    ("kyber") Kyber768_90s: OQS_KEM_alg_kyber_768_90s,
-    ("kyber") Kyber1024_90s: OQS_KEM_alg_kyber_1024_90s,
-    ("ntru") NtruHps2048509: OQS_KEM_alg_ntru_hps2048509,
-    ("ntru") NtruHps2048677: OQS_KEM_alg_ntru_hps2048677,
-    ("ntru") NtruHps4096821: OQS_KEM_alg_ntru_hps4096821,
-    ("ntru") NtruHps40961229: OQS_KEM_alg_ntru_hps40961229,
-    ("ntru") NtruHrss701: OQS_KEM_alg_ntru_hrss701,
-    ("ntru") NtruHrss1373: OQS_KEM_alg_ntru_hrss1373,
-    ("frodokem") FrodoKem640Aes: OQS_KEM_alg_frodokem_640_aes,
-    ("frodokem") FrodoKem640Shake: OQS_KEM_alg_frodokem_640_shake,
-    ("frodokem") FrodoKem976Aes: OQS_KEM_alg_frodokem_976_aes,
-    ("frodokem") FrodoKem976Shake: OQS_KEM_alg_frodokem_976_shake,
-    ("frodokem") FrodoKem1344Aes: OQS_KEM_alg_frodokem_1344_aes,
-    ("frodokem") FrodoKem1344Shake: OQS_KEM_alg_frodokem_1344_shake,
 }
 
 impl Algorithm {
