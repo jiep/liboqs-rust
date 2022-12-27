@@ -58,15 +58,24 @@ fn main() {
         };
     }
 
-    // KEMs
-    // BIKE is not supported on Windows or Arm32, so if either is in the mix,
-    // have it be opt-in explicitly except through the default kems feature.
-    if cfg!(feature = "kems") && !(cfg!(windows) || cfg!(target_arch = "arm")) {
-        println!("cargo:rustc-cfg=feature=\"bike\"");
-        config.define("OQS_ENABLE_KEM_BIKE", "Yes");
-    } else {
-        algorithm_feature!("KEM", "bike");
-    }
+    config.define("OQS_ENABLE_KEM_BIKE", "No");
+    config.define("OQS_ENABLE_KEM_FRODOKEM", "No");
+    config.define("OQS_ENABLE_KEM_NTRU", "No");
+    config.define("OQS_ENABLE_KEM_NTRUPRIME", "No");
+    config.define("OQS_ENABLE_KEM_SABER", "No");
+    config.define("OQS_ENABLE_KEM_CLASSIC_MCELIECE", "No");
+    config.define("OQS_ENABLE_KEM_SIKE", "No");
+    config.define("OQS_ENABLE_KEM_SIDH", "No");
+    config.define("OQS_ENABLE_KEM_HQC", "No");
+    config.define("OQS_ENABLE_KEM_kyber_1024_90s", "No");
+    config.define("OQS_ENABLE_KEM_kyber_768_90s", "No");
+    config.define("OQS_ENABLE_KEM_kyber_512_90s", "No");
+
+    config.define("OQS_ENABLE_SIG_FALCON", "No");
+    config.define("OQS_ENABLE_SIG_RAINBOW", "No");
+    config.define("OQS_ENABLE_SIG_SPHINCS", "No");
+    config.define("OQS_ENABLE_SIG_PICNIC", "No");
+
     algorithm_feature!("KEM", "kyber");
 
     // signature schemes

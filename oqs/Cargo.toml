@@ -19,13 +19,16 @@ path = "../oqs-sys"
 version = "0.7.2-rc2"
 default-features = false
 
+[dev-dependencies]
+rand = "0.8.5"
+
 [features]
 default = ["oqs-sys/openssl", "kems", "sigs", "std"]
 std = []
 non_portable = ["oqs-sys/non_portable"]
 
 # algorithms: KEMs
-kems = ["oqs-sys/kems", "kyber"]
+kems = ["kyber"]
 kyber = ["oqs-sys/kyber"]
 # algorithms: Signature schemes
 sigs = ["dilithium"]

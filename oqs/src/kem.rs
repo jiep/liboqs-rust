@@ -58,14 +58,29 @@ macro_rules! implement_kems {
                 #[test]
                 #[cfg(feature = $feat)]
                 fn test_encaps_decaps() -> Result<()> {
+                    use rand::thread_rng;
+                    use rand::Rng;
+
+                    pub fn get_random_key32() -> Vec<u8> {
+                        let mut x = vec![0; 32];
+                        thread_rng()
+                            .try_fill(&mut x[..])
+                            .expect("Error while generating random number!");
+                        x
+                    }
+
                     crate::init();
 
                     let alg = Algorithm::$kem;
                     let kem = Kem::new(alg)?;
+                    let r = get_random_key32();
                     let (pk, sk) = kem.keypair()?;
-                    let (ct, ss1) = kem.encapsulate(&pk)?;
-                    let ss2 = kem.decapsulate(&sk, &ct)?;
-                    assert_eq!(ss1, ss2, "shared secret not equal!");
+                    let (ct, ss) = kem.encapsulate(&pk, &r)?;
+                    let (ct2, ss2) = kem.encapsulate(&pk, &r)?;
+                    let ss3 = kem.decapsulate(&sk, &ct)?;
+                    assert_eq!(ss, ss3);
+                    assert_eq!(ct, ct2);
+                    assert_eq!(ss, ss2);
                     Ok(())
                 }
 
@@ -153,16 +168,6 @@ impl std::fmt::Display for Algorithm {
 
 /// KEM algorithm
 ///
-/// # Example
-/// ```rust
-/// # if !cfg!(feature = "kyber") { return; }
-/// use oqs;
-/// oqs::init();
-/// let kem = oqs::kem::Kem::new(oqs::kem::Algorithm::Kyber512).unwrap();
-/// let (pk, sk) = kem.keypair().unwrap();
-/// let (ct, ss) = kem.encapsulate(&pk).unwrap();
-/// let ss2 = kem.decapsulate(&sk, &ct).unwrap();
-/// assert_eq!(ss, ss2);
 /// ```
 pub struct Kem {
     algorithm: Algorithm,
@@ -314,6 +319,7 @@ impl Kem {
     pub fn encapsulate<'a, P: Into<PublicKeyRef<'a>>>(
         &self,
         pk: P,
+        r: &Vec<u8>
     ) -> Result<(Ciphertext, SharedSecret)> {
         let pk = pk.into();
         if pk.bytes.len() != self.length_public_key() {
@@ -333,6 +339,7 @@ impl Kem {
                 ct.bytes.as_mut_ptr(),
                 ss.bytes.as_mut_ptr(),
                 pk.bytes.as_ptr(),
+                r.as_ptr()
             )
         };
         status_to_result(status)?;
