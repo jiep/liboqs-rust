@@ -23,9 +23,9 @@ jobs:
         with:
           submodules: true
 
-      - name: Set stack size
-        if: startsWith(matrix.os, 'windows')
-        run: echo "RUSTFLAGS=-C link-arg=/STACK:20971520" >> $env:GITHUB_ENV
+      # - name: Set stack size
+      #   if: startsWith(matrix.os, 'windows')
+      #   run: echo "RUSTFLAGS=-C link-arg=/STACK:20971520" >> $env:GITHUB_ENV
 
       - name: Install OpenSSL
         if: startsWith(matrix.os, 'windows')
