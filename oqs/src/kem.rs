@@ -129,7 +129,7 @@ macro_rules! implement_kems {
 }
 
 implement_kems! {
-    
+
     ("kyber") Kyber512: OQS_KEM_alg_kyber_512,
     ("kyber") Kyber768: OQS_KEM_alg_kyber_768,
     ("kyber") Kyber1024: OQS_KEM_alg_kyber_1024,
@@ -319,7 +319,7 @@ impl Kem {
     pub fn encapsulate<'a, P: Into<PublicKeyRef<'a>>>(
         &self,
         pk: P,
-        r: &Vec<u8>
+        r: &Vec<u8>,
     ) -> Result<(Ciphertext, SharedSecret)> {
         let pk = pk.into();
         if pk.bytes.len() != self.length_public_key() {
@@ -339,7 +339,7 @@ impl Kem {
                 ct.bytes.as_mut_ptr(),
                 ss.bytes.as_mut_ptr(),
                 pk.bytes.as_ptr(),
-                r.as_ptr()
+                r.as_ptr(),
             )
         };
         status_to_result(status)?;
