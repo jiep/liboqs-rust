@@ -62,7 +62,7 @@ macro_rules! implement_kems {
                     use rand::Rng;
 
                     pub fn get_random_key32() -> Vec<u8> {
-                        let mut x = vec![0; 32];
+                        let mut x = alloc::vec![0; 32];
                         thread_rng()
                             .try_fill(&mut x[..])
                             .expect("Error while generating random number!");
