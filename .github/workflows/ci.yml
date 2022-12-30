@@ -10,22 +10,15 @@ jobs:
       matrix:
         os:
           - macos-latest
-          - ubuntu-20.04
+          - ubuntu-22.04
           - windows-latest
         rust:
           - stable
-    env:
-      # 20 MiB stack
-      RUST_MIN_STACK: 20971520
 
     steps:
       - uses: actions/checkout@v3
         with:
           submodules: true
-
-      # - name: Set stack size
-      #   if: startsWith(matrix.os, 'windows')
-      #   run: echo "RUSTFLAGS=-C link-arg=/STACK:20971520" >> $env:GITHUB_ENV
 
       - name: Install OpenSSL
         if: startsWith(matrix.os, 'windows')
