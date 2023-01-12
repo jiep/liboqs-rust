@@ -28,8 +28,9 @@ std = []
 non_portable = ["oqs-sys/non_portable"]
 
 # algorithms: KEMs
-kems = ["kyber"]
+kems = ["kyber", "classic_mceliece"]
 kyber = ["oqs-sys/kyber"]
+classic_mceliece = ["oqs-sys/classic_mceliece"]
 # algorithms: Signature schemes
 sigs = ["dilithium"]
 dilithium = ["oqs-sys/dilithium"]

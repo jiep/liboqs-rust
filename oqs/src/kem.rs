@@ -129,7 +129,6 @@ macro_rules! implement_kems {
 }
 
 implement_kems! {
-
     ("kyber") Kyber512: OQS_KEM_alg_kyber_512,
     ("kyber") Kyber768: OQS_KEM_alg_kyber_768,
     ("kyber") Kyber1024: OQS_KEM_alg_kyber_1024,

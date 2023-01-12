@@ -28,8 +28,10 @@ openssl = []
 docs = []
 non_portable = []
 # algorithms: KEMs
-kems = ["kyber"]
+kems = ["kyber", "classic_mceliece"]
 kyber = []
+classic_mceliece = []
+
 # algorithms: Signature schemes
 sigs = ["dilithium"]
 dilithium = []
