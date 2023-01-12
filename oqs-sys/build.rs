@@ -63,7 +63,14 @@ fn main() {
     config.define("OQS_ENABLE_KEM_NTRU", "No");
     config.define("OQS_ENABLE_KEM_NTRUPRIME", "No");
     config.define("OQS_ENABLE_KEM_SABER", "No");
-    config.define("OQS_ENABLE_KEM_CLASSIC_MCELIECE", "No");
+    // config.define("OQS_ENABLE_KEM_CLASSIC_MCELIECE", "No");
+    config.define("OQS_ENABLE_KEM_classic_mceliece_348864", "No");
+    config.define("OQS_ENABLE_KEM_classic_mceliece_460896", "No");
+    config.define("OQS_ENABLE_KEM_classic_mceliece_6688128", "No");
+    config.define("OQS_ENABLE_KEM_classic_mceliece_6688128f", "No");
+    config.define("OQS_ENABLE_KEM_classic_mceliece_6960119", "No");
+    config.define("OQS_ENABLE_KEM_classic_mceliece_8192128", "No");
+    config.define("OQS_ENABLE_KEM_classic_mceliece_8192128f", "No");
     config.define("OQS_ENABLE_KEM_SIKE", "No");
     config.define("OQS_ENABLE_KEM_SIDH", "No");
     config.define("OQS_ENABLE_KEM_HQC", "No");
@@ -77,6 +84,7 @@ fn main() {
     config.define("OQS_ENABLE_SIG_PICNIC", "No");
 
     algorithm_feature!("KEM", "kyber");
+    algorithm_feature!("KEM", "classic_mceliece");
 
     // signature schemes
     algorithm_feature!("SIG", "dilithium");

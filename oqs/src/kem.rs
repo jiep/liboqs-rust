@@ -133,6 +133,9 @@ implement_kems! {
     ("kyber") Kyber512: OQS_KEM_alg_kyber_512,
     ("kyber") Kyber768: OQS_KEM_alg_kyber_768,
     ("kyber") Kyber1024: OQS_KEM_alg_kyber_1024,
+    ("classic_mceliece") ClassicMcEliece348864f: OQS_KEM_alg_classic_mceliece_348864f,
+    ("classic_mceliece") ClassicMcEliece460896f: OQS_KEM_alg_classic_mceliece_460896f,
+    ("classic_mceliece") ClassicMcEliece6960119f: OQS_KEM_alg_classic_mceliece_6960119f,
 }
 
 impl Algorithm {
