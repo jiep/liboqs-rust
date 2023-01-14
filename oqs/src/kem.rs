@@ -58,7 +58,7 @@ macro_rules! implement_kems {
                 #[test]
                 #[cfg(feature = $feat)]
                 fn test_encaps_decaps() -> Result<()> {
-                    
+
                     crate::init();
 
                     let alg = Algorithm::$kem;
@@ -310,29 +310,29 @@ impl Kem {
     /// Generate randomness
     pub fn get_randomness(&self) -> Result<Vec<u8>> {
         use rand::{thread_rng, Rng};
-                
+
         let kem = unsafe { self.kem.as_ref() };
 
         let r = if self.algorithm().name().contains("McEliece") {
             let gen_e = kem.gen_e.unwrap();
             let mut r = Vec::with_capacity(kem.length_coins);
-            unsafe { 
+            unsafe {
                 gen_e(r.as_mut_ptr());
                 r.set_len(kem.length_coins);
             }
-            
+
             r
         } else {
             let kem = unsafe { self.kem.as_ref() };
 
-            let mut r= alloc::vec![0; kem.length_coins];
+            let mut r = alloc::vec![0; kem.length_coins];
             thread_rng()
                 .try_fill(&mut r[..])
                 .expect("Error while generating random number!");
 
             r
         };
-    
+
         Ok(r)
     }
 
