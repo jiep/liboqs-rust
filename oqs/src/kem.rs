@@ -242,6 +242,12 @@ impl Kem {
         kem.length_shared_secret
     }
 
+    /// Get the length of a randomness
+    pub fn length_randomness(&self) -> usize {
+        let kem = unsafe { self.kem.as_ref() };
+        kem.length_coins
+    }
+
     /// Obtain a secret key objects from bytes
     ///
     /// Returns None if the secret key is not the correct length.
