@@ -316,8 +316,11 @@ impl Kem {
         let r = if self.algorithm().name().contains("McEliece") {
             let gen_e = kem.gen_e.unwrap();
             let mut r = Vec::with_capacity(kem.length_coins);
-            unsafe { gen_e(r.as_mut_ptr()); }
-
+            unsafe { 
+                gen_e(r.as_mut_ptr());
+                r.set_len(kem.length_coins);
+            }
+            
             r
         } else {
             let kem = unsafe { self.kem.as_ref() };
