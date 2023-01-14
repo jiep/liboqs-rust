@@ -28,19 +28,13 @@ openssl = []
 docs = []
 non_portable = []
 # algorithms: KEMs
-kems = ["classic_mceliece", "frodokem", "hqc", "kyber", "ntru"]
-bike = []  # BIKE is enabled by build.rs on non-windows targets
-classic_mceliece = []
-frodokem = []
-hqc = []
+kems = ["kyber", "classic_mceliece"]
 kyber = []
-ntru = []
-saber = []
+classic_mceliece = []
+
 # algorithms: Signature schemes
-sigs = ["dilithium", "falcon", "sphincs"]
+sigs = ["dilithium"]
 dilithium = []
-falcon = []
-sphincs = []
 
 [package.metadata.docs.rs]
 features = ["docs"]

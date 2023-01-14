@@ -58,14 +58,19 @@ macro_rules! implement_kems {
                 #[test]
                 #[cfg(feature = $feat)]
                 fn test_encaps_decaps() -> Result<()> {
+
                     crate::init();
 
                     let alg = Algorithm::$kem;
                     let kem = Kem::new(alg)?;
+                    let r = kem.get_randomness().unwrap();
                     let (pk, sk) = kem.keypair()?;
-                    let (ct, ss1) = kem.encapsulate(&pk)?;
-                    let ss2 = kem.decapsulate(&sk, &ct)?;
-                    assert_eq!(ss1, ss2, "shared secret not equal!");
+                    let (ct, ss) = kem.encapsulate(&pk, &r)?;
+                    let (ct2, ss2) = kem.encapsulate(&pk, &r)?;
+                    let ss3 = kem.decapsulate(&sk, &ct)?;
+                    assert_eq!(ss, ss3);
+                    assert_eq!(ct, ct2);
+                    assert_eq!(ss, ss2);
                     Ok(())
                 }
 
@@ -114,39 +119,12 @@ macro_rules! implement_kems {
 }
 
 implement_kems! {
-    ("bike") BikeL1: OQS_KEM_alg_bike_l1,
-    ("bike") BikeL3: OQS_KEM_alg_bike_l3,
-    ("classic_mceliece") ClassicMcEliece348864: OQS_KEM_alg_classic_mceliece_348864,
-    ("classic_mceliece") ClassicMcEliece348864f: OQS_KEM_alg_classic_mceliece_348864f,
-    ("classic_mceliece") ClassicMcEliece460896: OQS_KEM_alg_classic_mceliece_460896,
-    ("classic_mceliece") ClassicMcEliece460896f: OQS_KEM_alg_classic_mceliece_460896f,
-    ("classic_mceliece") ClassicMcEliece6688128: OQS_KEM_alg_classic_mceliece_6688128,
-    ("classic_mceliece") ClassicMcEliece6688128f: OQS_KEM_alg_classic_mceliece_6688128f,
-    ("classic_mceliece") ClassicMcEliece6960119: OQS_KEM_alg_classic_mceliece_6960119,
-    ("classic_mceliece") ClassicMcEliece6960119f: OQS_KEM_alg_classic_mceliece_6960119f,
-    ("classic_mceliece") ClassicMcEliece8192128: OQS_KEM_alg_classic_mceliece_8192128,
-    ("classic_mceliece") ClassicMcEliece8192128f: OQS_KEM_alg_classic_mceliece_8192128f,
-    ("hqc") Hqc128: OQS_KEM_alg_hqc_128,
-    ("hqc") Hqc192: OQS_KEM_alg_hqc_192,
-    ("hqc") Hqc256: OQS_KEM_alg_hqc_256,
     ("kyber") Kyber512: OQS_KEM_alg_kyber_512,
     ("kyber") Kyber768: OQS_KEM_alg_kyber_768,
     ("kyber") Kyber1024: OQS_KEM_alg_kyber_1024,
-    ("kyber") Kyber512_90s: OQS_KEM_alg_kyber_512_90s,
-    ("kyber") Kyber768_90s: OQS_KEM_alg_kyber_768_90s,
-    ("kyber") Kyber1024_90s: OQS_KEM_alg_kyber_1024_90s,
-    ("ntru") NtruHps2048509: OQS_KEM_alg_ntru_hps2048509,
-    ("ntru") NtruHps2048677: OQS_KEM_alg_ntru_hps2048677,
-    ("ntru") NtruHps4096821: OQS_KEM_alg_ntru_hps4096821,
-    ("ntru") NtruHps40961229: OQS_KEM_alg_ntru_hps40961229,
-    ("ntru") NtruHrss701: OQS_KEM_alg_ntru_hrss701,
-    ("ntru") NtruHrss1373: OQS_KEM_alg_ntru_hrss1373,
-    ("frodokem") FrodoKem640Aes: OQS_KEM_alg_frodokem_640_aes,
-    ("frodokem") FrodoKem640Shake: OQS_KEM_alg_frodokem_640_shake,
-    ("frodokem") FrodoKem976Aes: OQS_KEM_alg_frodokem_976_aes,
-    ("frodokem") FrodoKem976Shake: OQS_KEM_alg_frodokem_976_shake,
-    ("frodokem") FrodoKem1344Aes: OQS_KEM_alg_frodokem_1344_aes,
-    ("frodokem") FrodoKem1344Shake: OQS_KEM_alg_frodokem_1344_shake,
+    ("classic_mceliece") ClassicMcEliece348864f: OQS_KEM_alg_classic_mceliece_348864f,
+    ("classic_mceliece") ClassicMcEliece460896f: OQS_KEM_alg_classic_mceliece_460896f,
+    ("classic_mceliece") ClassicMcEliece6960119f: OQS_KEM_alg_classic_mceliece_6960119f,
 }
 
 impl Algorithm {
@@ -182,16 +160,6 @@ impl std::fmt::Display for Algorithm {
 
 /// KEM algorithm
 ///
-/// # Example
-/// ```rust
-/// # if !cfg!(feature = "kyber") { return; }
-/// use oqs;
-/// oqs::init();
-/// let kem = oqs::kem::Kem::new(oqs::kem::Algorithm::Kyber512).unwrap();
-/// let (pk, sk) = kem.keypair().unwrap();
-/// let (ct, ss) = kem.encapsulate(&pk).unwrap();
-/// let ss2 = kem.decapsulate(&sk, &ct).unwrap();
-/// assert_eq!(ss, ss2);
 /// ```
 pub struct Kem {
     algorithm: Algorithm,
@@ -274,6 +242,12 @@ impl Kem {
         kem.length_shared_secret
     }
 
+    /// Get the length of a randomness
+    pub fn length_randomness(&self) -> usize {
+        let kem = unsafe { self.kem.as_ref() };
+        kem.length_coins
+    }
+
     /// Obtain a secret key objects from bytes
     ///
     /// Returns None if the secret key is not the correct length.
@@ -339,10 +313,40 @@ impl Kem {
         Ok((pk, sk))
     }
 
+    /// Generate randomness
+    pub fn get_randomness(&self) -> Result<Vec<u8>> {
+        use rand::{thread_rng, Rng};
+
+        let kem = unsafe { self.kem.as_ref() };
+
+        let r = if self.algorithm().name().contains("McEliece") {
+            let gen_e = kem.gen_e.unwrap();
+            let mut r = Vec::with_capacity(kem.length_coins);
+            unsafe {
+                gen_e(r.as_mut_ptr());
+                r.set_len(kem.length_coins);
+            }
+
+            r
+        } else {
+            let kem = unsafe { self.kem.as_ref() };
+
+            let mut r = alloc::vec![0; kem.length_coins];
+            thread_rng()
+                .try_fill(&mut r[..])
+                .expect("Error while generating random number!");
+
+            r
+        };
+
+        Ok(r)
+    }
+
     /// Encapsulate to the provided public key
     pub fn encapsulate<'a, P: Into<PublicKeyRef<'a>>>(
         &self,
         pk: P,
+        r: &Vec<u8>,
     ) -> Result<(Ciphertext, SharedSecret)> {
         let pk = pk.into();
         if pk.bytes.len() != self.length_public_key() {
@@ -362,6 +366,7 @@ impl Kem {
                 ct.bytes.as_mut_ptr(),
                 ss.bytes.as_mut_ptr(),
                 pk.bytes.as_ptr(),
+                r.as_ptr(),
             )
         };
         status_to_result(status)?;

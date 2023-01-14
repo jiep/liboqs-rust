@@ -13,11 +13,15 @@ license = "MIT OR Apache-2.0"
 libc = "0.2"
 cstr_core = { version = "0.2", default-features = false, features = ["alloc"] }
 serde = { version = "1.0", optional = true, default-features = false, features = ["derive", "alloc"] }
+rand = "0.8.5"
 
 [dependencies.oqs-sys]
 path = "../oqs-sys"
 version = "0.7.2-rc2"
 default-features = false
+
+[dev-dependencies]
+rand = "0.8.5"
 
 [features]
 default = ["oqs-sys/openssl", "kems", "sigs", "std"]
@@ -25,16 +29,9 @@ std = []
 non_portable = ["oqs-sys/non_portable"]
 
 # algorithms: KEMs
-kems = ["oqs-sys/kems", "classic_mceliece", "frodokem", "hqc", "kyber", "ntru"]
-bike = ["oqs-sys/bike"]  # not supported on Windows or 32-bit ARM
-classic_mceliece = ["oqs-sys/classic_mceliece"]
-frodokem = ["oqs-sys/frodokem"]
-hqc = ["oqs-sys/hqc"]
+kems = ["kyber", "classic_mceliece"]
 kyber = ["oqs-sys/kyber"]
-ntru = ["oqs-sys/ntru"]
-saber = ["oqs-sys/saber"]
+classic_mceliece = ["oqs-sys/classic_mceliece"]
 # algorithms: Signature schemes
-sigs = ["oqs-sys/sigs", "dilithium", "falcon", "sphincs"]
+sigs = ["dilithium"]
 dilithium = ["oqs-sys/dilithium"]
-falcon = ["oqs-sys/falcon"]
-sphincs = ["oqs-sys/sphincs"]

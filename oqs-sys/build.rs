@@ -58,31 +58,36 @@ fn main() {
         };
     }
 
-    // KEMs
-    // BIKE is not supported on Windows or Arm32, so if either is in the mix,
-    // have it be opt-in explicitly except through the default kems feature.
-    if cfg!(feature = "kems") && !(cfg!(windows) || cfg!(target_arch = "arm")) {
-        println!("cargo:rustc-cfg=feature=\"bike\"");
-        config.define("OQS_ENABLE_KEM_BIKE", "Yes");
-    } else {
-        algorithm_feature!("KEM", "bike");
-    }
-    algorithm_feature!("KEM", "classic_mceliece");
-    algorithm_feature!("KEM", "frodokem");
-    algorithm_feature!("KEM", "hqc");
+    config.define("OQS_ENABLE_KEM_BIKE", "No");
+    config.define("OQS_ENABLE_KEM_FRODOKEM", "No");
+    config.define("OQS_ENABLE_KEM_NTRU", "No");
+    config.define("OQS_ENABLE_KEM_NTRUPRIME", "No");
+    config.define("OQS_ENABLE_KEM_SABER", "No");
+    // config.define("OQS_ENABLE_KEM_CLASSIC_MCELIECE", "No");
+    config.define("OQS_ENABLE_KEM_classic_mceliece_348864", "No");
+    config.define("OQS_ENABLE_KEM_classic_mceliece_460896", "No");
+    config.define("OQS_ENABLE_KEM_classic_mceliece_6688128", "No");
+    config.define("OQS_ENABLE_KEM_classic_mceliece_6688128f", "No");
+    config.define("OQS_ENABLE_KEM_classic_mceliece_6960119", "No");
+    config.define("OQS_ENABLE_KEM_classic_mceliece_8192128", "No");
+    config.define("OQS_ENABLE_KEM_classic_mceliece_8192128f", "No");
+    config.define("OQS_ENABLE_KEM_SIKE", "No");
+    config.define("OQS_ENABLE_KEM_SIDH", "No");
+    config.define("OQS_ENABLE_KEM_HQC", "No");
+    config.define("OQS_ENABLE_KEM_kyber_1024_90s", "No");
+    config.define("OQS_ENABLE_KEM_kyber_768_90s", "No");
+    config.define("OQS_ENABLE_KEM_kyber_512_90s", "No");
+
+    config.define("OQS_ENABLE_SIG_FALCON", "No");
+    config.define("OQS_ENABLE_SIG_RAINBOW", "No");
+    config.define("OQS_ENABLE_SIG_SPHINCS", "No");
+    config.define("OQS_ENABLE_SIG_PICNIC", "No");
+
     algorithm_feature!("KEM", "kyber");
-    algorithm_feature!("KEM", "ntru");
-    algorithm_feature!("KEM", "ntruprime");
-    algorithm_feature!("KEM", "saber");
-    algorithm_feature!("KEM", "sidh");
-    algorithm_feature!("KEM", "sike");
+    algorithm_feature!("KEM", "classic_mceliece");
 
     // signature schemes
     algorithm_feature!("SIG", "dilithium");
-    algorithm_feature!("SIG", "falcon");
-    algorithm_feature!("SIG", "picnic");
-    algorithm_feature!("SIG", "rainbow");
-    algorithm_feature!("SIG", "sphincs");
 
     if cfg!(windows) {
         // Select the latest available Windows SDK
