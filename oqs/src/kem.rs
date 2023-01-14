@@ -58,22 +58,12 @@ macro_rules! implement_kems {
                 #[test]
                 #[cfg(feature = $feat)]
                 fn test_encaps_decaps() -> Result<()> {
-                    use rand::thread_rng;
-                    use rand::Rng;
-
-                    pub fn get_random_key32() -> Vec<u8> {
-                        let mut x = alloc::vec![0; 32];
-                        thread_rng()
-                            .try_fill(&mut x[..])
-                            .expect("Error while generating random number!");
-                        x
-                    }
-
+                    
                     crate::init();
 
                     let alg = Algorithm::$kem;
                     let kem = Kem::new(alg)?;
-                    let r = get_random_key32();
+                    let r = kem.get_randomness().unwrap();
                     let (pk, sk) = kem.keypair()?;
                     let (ct, ss) = kem.encapsulate(&pk, &r)?;
                     let (ct2, ss2) = kem.encapsulate(&pk, &r)?;
@@ -315,6 +305,32 @@ impl Kem {
             sk.bytes.set_len(kem.length_secret_key);
         }
         Ok((pk, sk))
+    }
+
+    /// Generate randomness
+    pub fn get_randomness(&self) -> Result<Vec<u8>> {
+        use rand::{thread_rng, Rng};
+                
+        let kem = unsafe { self.kem.as_ref() };
+
+        let r = if self.algorithm().name().contains("McEliece") {
+            let gen_e = kem.gen_e.unwrap();
+            let mut r = Vec::with_capacity(kem.length_coins);
+            unsafe { gen_e(r.as_mut_ptr()); }
+
+            r
+        } else {
+            let kem = unsafe { self.kem.as_ref() };
+
+            let mut r= alloc::vec![0; kem.length_coins];
+            thread_rng()
+                .try_fill(&mut r[..])
+                .expect("Error while generating random number!");
+
+            r
+        };
+    
+        Ok(r)
     }
 
     /// Encapsulate to the provided public key
